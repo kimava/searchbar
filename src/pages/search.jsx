@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import debounce from 'lodash.debounce';
 import SearchBar from '../components/searchBar';
 
 function Search({ presenter }) {
-  const [query, setQuery] = useState('');
   const [suggestion, setSuggestion] = useState([]);
 
-  useEffect(() => {
+  function handleQuery(query) {
     query ? setSuggestion(presenter.suggestQuery(query)) : setSuggestion([]);
-  }, [presenter, query]);
+  }
+
+  const debouncedhanldeQuery = useMemo(() => debounce(handleQuery, 200), []);
 
   function link(query) {
     return `https://www.google.com/search?q=${query}`;
@@ -15,7 +17,11 @@ function Search({ presenter }) {
 
   return (
     <div>
-      <SearchBar setQuery={setQuery} suggestion={suggestion} link={link} />
+      <SearchBar
+        suggestion={suggestion}
+        link={link}
+        onQuery={debouncedhanldeQuery}
+      />
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function SearchBar({ setQuery, suggestion, link }) {
+function SearchBar({ suggestion, link, onQuery }) {
   const [completedWord, setCompletedWord] = useState('');
 
   function onSubmit(event) {
@@ -16,7 +16,7 @@ function SearchBar({ setQuery, suggestion, link }) {
         value={completedWord}
         onChange={(e) => {
           setCompletedWord(e.currentTarget.value);
-          setQuery(e.currentTarget.value);
+          onQuery(e.currentTarget.value);
         }}
         onKeyPress={onSubmit}
       />
