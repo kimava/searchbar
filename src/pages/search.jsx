@@ -6,7 +6,7 @@ function Search({ presenter }) {
   const [suggestion, setSuggestion] = useState([]);
 
   useEffect(() => {
-    query && setSuggestion(presenter.suggestQuery(query));
+    query ? setSuggestion(presenter.suggestQuery(query)) : setSuggestion([]);
   }, [presenter, query]);
 
   function link(query) {
