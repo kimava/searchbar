@@ -30,7 +30,7 @@ function SearchBar({ suggestion, query, setQuery, onSearch, link }) {
       setQuery(suggestion[listIndex]);
       openLink(suggestion[listIndex]);
       setListIndex(-1);
-    } else if (key === 'Enter' && listIndex === -1 && query.length > 0) {
+    } else if (key === 'Enter' && listIndex === -1 && query !== '') {
       openLink(query);
     }
   }
