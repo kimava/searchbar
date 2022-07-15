@@ -1,11 +1,11 @@
-import Search from '../searchPresenter';
+import SearchPresenter from '../searchPresenter';
 import stubData from './stubData';
 
 describe('Search', () => {
   let search;
 
   beforeEach(() => {
-    search = new Search(stubData, 3);
+    search = new SearchPresenter(stubData, 3);
   });
 
   it('is initialized with the number of max result to show', () => {

@@ -1,4 +1,4 @@
-class Search {
+class SearchPresenter {
   constructor(data, maxResult) {
     this.data = data;
     this.maxResult = maxResult;
@@ -16,4 +16,4 @@ class Search {
   }
 }
 
-export default Search;
+export default SearchPresenter;
