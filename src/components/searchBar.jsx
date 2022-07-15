@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import styled from 'styled-components';
 
 function SearchBar({ suggestion, link, onQuery }) {
   const [completedWord, setCompletedWord] = useState('');
@@ -31,7 +32,7 @@ function SearchBar({ suggestion, link, onQuery }) {
   }
 
   return (
-    <div>
+    <StyledDiv>
       <input
         placeholder='검색어를 입력하세요'
         value={completedWord || ''}
@@ -44,7 +45,12 @@ function SearchBar({ suggestion, link, onQuery }) {
       {suggestion && (
         <ul>
           {suggestion.map((item) => (
-            <li key={item}>
+            <li
+              key={item}
+              className={
+                suggestionIndex === suggestion.indexOf(item) ? 'focus' : ''
+              }
+            >
               <a
                 target='_blank'
                 onClick={() => {
@@ -58,8 +64,47 @@ function SearchBar({ suggestion, link, onQuery }) {
           ))}
         </ul>
       )}
-    </div>
+    </StyledDiv>
   );
 }
 
 export default SearchBar;
+
+const StyledDiv = styled.div`
+  margin: 2rem auto;
+  width: 80%;
+
+  input {
+    padding: 1rem 0.5rem;
+    width: 80%;
+    font-size: inherit;
+    border: 1px solid lightgray;
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+    width: 80%;
+    border: 1px solid lightgray;
+  }
+
+  li {
+    padding: 0.5rem;
+    width: 100;
+    list-style: none;
+
+    &:hover {
+      background-color: lightgray;
+    }
+
+    &.focus {
+      background-color: lightgray;
+    }
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+  }
+`;
