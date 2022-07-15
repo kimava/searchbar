@@ -9,9 +9,13 @@ function Search({ presenter }) {
     query && setSuggestion(presenter.suggestQuery(query));
   }, [presenter, query]);
 
+  function link(query) {
+    return `https://www.google.com/search?q=${query}`;
+  }
+
   return (
     <div>
-      <SearchBar setQuery={setQuery} suggestion={suggestion} />
+      <SearchBar setQuery={setQuery} suggestion={suggestion} link={link} />
     </div>
   );
 }

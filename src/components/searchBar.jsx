@@ -1,6 +1,6 @@
 import React from 'react';
 
-function SearchBar({ setQuery, suggestion }) {
+function SearchBar({ setQuery, suggestion, link }) {
   return (
     <div>
       <input
@@ -12,7 +12,11 @@ function SearchBar({ setQuery, suggestion }) {
       {suggestion && (
         <ul>
           {suggestion.map((item) => (
-            <li key={item}>{item}</li>
+            <li key={item}>
+              <a target='_blank' href={link(item)}>
+                {item}
+              </a>
+            </li>
           ))}
         </ul>
       )}
