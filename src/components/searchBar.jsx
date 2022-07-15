@@ -1,33 +1,37 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-function SearchBar({ suggestion, link, onQuery }) {
-  const [completedWord, setCompletedWord] = useState('');
-  const [suggestionIndex, setSuggestionIndex] = useState(-1);
+function SearchBar({ suggestion, query, setQuery, onSearch, link }) {
+  const [listIndex, setListIndex] = useState(-1);
 
-  function open(query) {
+  function openLink(query) {
     window.open(link(query), '_blank');
+    clearQuery();
   }
 
-  function handleKeyDown(event) {
-    if (suggestion.length === 0 || event.isComposing || event.keyCode === 229) {
+  function clearQuery() {
+    setQuery('');
+  }
+
+  function handleKeyDown({ key, keyCode, isComposing }) {
+    // return if no suggestion and prevent keydown occurs twice when pressed once
+    if (suggestion.length === 0 || isComposing || keyCode === 229) {
       return;
     }
 
-    if (event.key === 'ArrowDown' && suggestion.length - 1 > suggestionIndex) {
-      setSuggestionIndex((suggestionIndex) => suggestionIndex + 1);
-    } else if (event.key === 'ArrowUp' && suggestionIndex >= 0) {
-      setSuggestionIndex((suggestionIndex) => suggestionIndex - 1);
-    } else if (event.key === 'Enter' && suggestionIndex >= 0) {
-      open(suggestion[suggestionIndex]);
-      setCompletedWord(suggestion[suggestionIndex]);
-      setSuggestionIndex(-1);
-    } else if (
-      event.key === 'Enter' &&
-      completedWord.length > 0 &&
-      suggestionIndex === -1
-    ) {
-      open(completedWord);
+    const arrowDown = suggestion.length - 1 > listIndex;
+    const arrowUp = listIndex >= 0;
+
+    if (key === 'ArrowDown' && arrowDown) {
+      setListIndex((listIndex) => listIndex + 1);
+    } else if (key === 'ArrowUp' && arrowUp) {
+      setListIndex((listIndex) => listIndex - 1);
+    } else if (key === 'Enter' && listIndex >= 0) {
+      setQuery(suggestion[listIndex]);
+      openLink(suggestion[listIndex]);
+      setListIndex(-1);
+    } else if (key === 'Enter' && listIndex === -1 && query.length > 0) {
+      openLink(query);
     }
   }
 
@@ -36,37 +40,36 @@ function SearchBar({ suggestion, link, onQuery }) {
       <StyledForm>
         <input
           placeholder='검색어를 입력하세요'
-          value={completedWord || ''}
-          onChange={(e) => {
-            setCompletedWord(e.currentTarget.value);
-            onQuery(e.currentTarget.value);
+          value={query || ''}
+          onChange={({ target: { value } }) => {
+            setQuery(value);
+            onSearch(value);
           }}
           onKeyDown={handleKeyDown}
         />
-        <button onClick={() => setCompletedWord('')}>X</button>
+        <button onClick={() => setQuery('')}>X</button>
       </StyledForm>
 
-      {completedWord && suggestion && (
-        <ul>
+      {query && suggestion && (
+        <StyledUl>
           {suggestion.map((item) => (
-            <li
+            <StyledLi
               key={item}
-              className={
-                suggestionIndex === suggestion.indexOf(item) ? 'focus' : ''
-              }
+              className={listIndex === suggestion.indexOf(item) ? 'focus' : ''}
             >
               <a
                 target='_blank'
                 onClick={() => {
-                  setCompletedWord(item);
+                  setQuery(item);
+                  clearQuery();
                 }}
                 href={link(item)}
               >
                 {item}
               </a>
-            </li>
+            </StyledLi>
           ))}
-        </ul>
+        </StyledUl>
       )}
     </StyledDiv>
   );
@@ -77,33 +80,6 @@ export default SearchBar;
 const StyledDiv = styled.div`
   margin: 2rem auto;
   width: 80%;
-
-  ul {
-    margin: 0;
-    padding: 0;
-    width: 80%;
-    border: 1px solid lightgray;
-  }
-
-  li {
-    padding: 0.5rem;
-    width: 100;
-    list-style: none;
-
-    &:hover {
-      background-color: lightgray;
-    }
-
-    &.focus {
-      background-color: lightgray;
-    }
-  }
-
-  a {
-    text-decoration: none;
-    color: inherit;
-    cursor: pointer;
-  }
 `;
 
 const StyledForm = styled.div`
@@ -128,5 +104,32 @@ const StyledForm = styled.div`
     &:hover {
       transform: scale(1.1);
     }
+  }
+`;
+
+const StyledUl = styled.ul`
+  margin: 0;
+  padding: 0;
+  width: 80%;
+  border: 1px solid lightgray;
+`;
+
+const StyledLi = styled.li`
+  padding: 0.5rem;
+  width: 100;
+  list-style: none;
+
+  &:hover {
+    background-color: lightgray;
+  }
+
+  &.focus {
+    background-color: lightgray;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
   }
 `;
