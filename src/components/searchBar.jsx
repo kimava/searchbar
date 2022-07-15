@@ -10,7 +10,7 @@ function SearchBar({ suggestion, link, onQuery }) {
   }
 
   function handleKeyDown(event) {
-    if (suggestion.length === 0) {
+    if (suggestion.length === 0 || event.isComposing || event.keyCode === 229) {
       return;
     }
 
