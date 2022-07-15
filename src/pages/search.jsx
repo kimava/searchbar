@@ -9,7 +9,7 @@ function Search({ presenter }) {
     query ? setSuggestion(presenter.suggestQuery(query)) : setSuggestion([]);
   }
 
-  const debouncedhanldeQuery = useMemo(() => debounce(handleQuery, 200), []);
+  const debouncedhanldeQuery = debounce(handleQuery, 200);
 
   function link(query) {
     return `https://www.google.com/search?q=${query}`;

@@ -2,10 +2,31 @@ import React, { useState } from 'react';
 
 function SearchBar({ suggestion, link, onQuery }) {
   const [completedWord, setCompletedWord] = useState('');
+  const [suggestionIndex, setSuggestionIndex] = useState(-1);
 
-  function onSubmit(event) {
-    if (event.key === 'Enter' && completedWord.length > 0) {
-      window.open(link(completedWord), '_blank');
+  function open(query) {
+    window.open(link(query), '_blank');
+  }
+
+  function handleKeyDown(event) {
+    if (suggestion.length === 0) {
+      return;
+    }
+
+    if (event.key === 'ArrowDown' && suggestion.length - 1 > suggestionIndex) {
+      setSuggestionIndex((suggestionIndex) => suggestionIndex + 1);
+    } else if (event.key === 'ArrowUp' && suggestionIndex >= 0) {
+      setSuggestionIndex((suggestionIndex) => suggestionIndex - 1);
+    } else if (event.key === 'Enter' && suggestionIndex >= 0) {
+      open(suggestion[suggestionIndex]);
+      setCompletedWord(suggestion[suggestionIndex]);
+      setSuggestionIndex(-1);
+    } else if (
+      event.key === 'Enter' &&
+      completedWord.length > 0 &&
+      suggestionIndex === -1
+    ) {
+      open(completedWord);
     }
   }
 
@@ -13,12 +34,12 @@ function SearchBar({ suggestion, link, onQuery }) {
     <div>
       <input
         placeholder='검색어를 입력하세요'
-        value={completedWord}
+        value={completedWord || ''}
         onChange={(e) => {
           setCompletedWord(e.currentTarget.value);
           onQuery(e.currentTarget.value);
         }}
-        onKeyPress={onSubmit}
+        onKeyDown={handleKeyDown}
       />
       {suggestion && (
         <ul>
