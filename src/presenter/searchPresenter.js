@@ -6,7 +6,11 @@ class SearchPresenter {
 
   suggestQuery(query) {
     const result = this.data.reduce(
-      (acc, cur) => (cur.name.includes(query) && acc.push(cur.name), acc),
+      (acc, cur) => (
+        cur.name.toLowerCase().includes(query.toLowerCase()) &&
+          acc.push(cur.name),
+        acc
+      ),
       []
     );
 

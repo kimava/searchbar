@@ -25,7 +25,7 @@ const sutbData = [
   },
   {
     id: 832,
-    name: '환자 운반기',
+    name: 'Stub',
   },
   {
     id: 3,

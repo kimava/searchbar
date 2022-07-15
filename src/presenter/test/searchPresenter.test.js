@@ -27,5 +27,10 @@ describe('Search', () => {
       const items = search.suggestQuery('마스크');
       expect(items).toEqual(['마스크1', '마스크2', '마스크3']);
     });
+
+    it('compares name with queries as lower cases', () => {
+      const items = search.suggestQuery('s');
+      expect(items).toEqual(['Stub']);
+    });
   });
 });
