@@ -33,16 +33,20 @@ function SearchBar({ suggestion, link, onQuery }) {
 
   return (
     <StyledDiv>
-      <input
-        placeholder='검색어를 입력하세요'
-        value={completedWord || ''}
-        onChange={(e) => {
-          setCompletedWord(e.currentTarget.value);
-          onQuery(e.currentTarget.value);
-        }}
-        onKeyDown={handleKeyDown}
-      />
-      {suggestion && (
+      <StyledForm>
+        <input
+          placeholder='검색어를 입력하세요'
+          value={completedWord || ''}
+          onChange={(e) => {
+            setCompletedWord(e.currentTarget.value);
+            onQuery(e.currentTarget.value);
+          }}
+          onKeyDown={handleKeyDown}
+        />
+        <button onClick={() => setCompletedWord('')}>X</button>
+      </StyledForm>
+
+      {completedWord && suggestion && (
         <ul>
           {suggestion.map((item) => (
             <li
@@ -74,13 +78,6 @@ const StyledDiv = styled.div`
   margin: 2rem auto;
   width: 80%;
 
-  input {
-    padding: 1rem 0.5rem;
-    width: 80%;
-    font-size: inherit;
-    border: 1px solid lightgray;
-  }
-
   ul {
     margin: 0;
     padding: 0;
@@ -106,5 +103,30 @@ const StyledDiv = styled.div`
     text-decoration: none;
     color: inherit;
     cursor: pointer;
+  }
+`;
+
+const StyledForm = styled.div`
+  position: relative;
+  width: 80%;
+
+  input {
+    padding: 1rem 0.5rem;
+    width: 100%;
+    font-size: inherit;
+    border: 1px solid lightgray;
+  }
+
+  button {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+
+    &:hover {
+      transform: scale(1.1);
+    }
   }
 `;
