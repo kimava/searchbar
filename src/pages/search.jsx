@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import debounce from 'lodash.debounce';
-import SearchBar from '../components/searchBar';
+import SearchBar from '../components/searchBar/searchBar';
 
 function Search({ presenter }) {
   const [suggestion, setSuggestion] = useState([]);
