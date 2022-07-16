@@ -1,70 +1,135 @@
-# Getting Started with Create React App
+# Search Bar with Auto-complete Feature
+사용자가 검색어를 입력했을 때 데이터에 검색어와 일치하는 단어가 있을 경우, 아래에 검색 제시어가 노출됩니다.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<br/>
 
-## Available Scripts
+# Purpose
+사전 과제 제출을 위해 구현하였습니다.
 
-In the project directory, you can run:
+<br/>
 
-### `npm start`
+# Installation
+```
+npm install
+npm start
+```
+```localhost:3000``` 접속
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+<br/>
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+# Feature
+- 검색어 입력 시, 검색어와 일치하는 단어가 있으면 아래 검색창에 제시어가 노출 됩니다. (예: '마' 입력 → '마스크' 제시)
+- 사용자가 검색창에 검색어 입력 후 엔터/ 아래 제시된 제시어 키보드(⬆️, ⬇️)로 선택 후 엔터/ 제시어 클릭 시 외부 구글 검색창으로 이동합니다.
+- 검색창 ❌ 버튼 클릭 시 검색창이 초기화 됩니다.
+<br/>
 
-### `npm test`
+# Stack
+- React (CRA)
+- Styled-components
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+<br/>
 
-### `npm run build`
+# Folder Structure
+```
+📦src
+ ┣ 📂components
+ ┃ ┗ 📂searchBar
+ ┃ ┃ ┣ 📂test
+ ┃ ┃ ┗ 📜searchBar.jsx
+ ┣ 📂hooks
+ ┃ ┗ 📜useDebounce.jsx
+ ┣ 📂network
+ ┃ ┗ 📜dataClient.js
+ ┣ 📂pages
+ ┃ ┗ 📜search.jsx
+ ┣ 📂presenter
+ ┃ ┣ 📂test
+ ┃ ┗ 📜searchPresenter.js
+ ┣ 📜App.js
+ ┣ 📜index.css
+ ┣ 📜index.js
+ ┗ 📜setupTests.js
+ ```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+# Usage
+#### src/network/dataClient
+|함수|역할|
+|---|-------|
+|```fetchItems```|data.json에서 파일 읽어오기|
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+#### src/presenter/searchPresenter
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```
+class SearchPresenter {
+  constructor(data, maxResult) {
+    this.data = data;
+    this.maxResult = maxResult;
+  }
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+  suggestQuery(query)
+  navigateSuggestion(key, index, list, callback, onSelect)
+```  
+|필드|역할|
+|---|-------|
+|```data```|외부에서 주입 받은 데이터 배열|
+|```maxResult```|사용자에게 보여 줄 최대 제시어의 개수|
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+|함수|역할|
+|---|-------|
+|```suggestQuery```|사용자의 검색어 포함(일치)하는 name 배열을 반환 <br/>(maxResult 개수 반영)|
+|```navigateSuggestion```|검색창 keyboard event handle|
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-## Learn More
+#### 키보드 이벤트 핸들링
+1. input focus 시 시작 index -1로 초기화
+2. 검색제시어 배열이 있을 경우, 사용자가 ⬇️ 누르면 index + 1 => 실제 배열 인덱스(0부터 시작) 같도록 함
+3. 검색제시어 배열이 있을 경우, 사용자가 ⬆️ 누르면 index - 1 
+4. 사용자가 index = -1, 인풋(검색창)에서 엔터, 혹은 검색제시어 배열 내에서 엔터 누르면 해당 인덱스 콜백 함수에 전달
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+#### src/pages/search
+|함수|역할|
+|---|-------|
+|```handleChange```|인풋값 → state 할당|
+|```handleKeyDown```|인풋 키보드 이벤트 발생 시 navigateSuggestion 호출|
+|```link```|외부 검색 링크 주소 반환|
 
-### Code Splitting
+#### suggestQuery 호출
+- debounce hook을 이용해 query에 debounce 적용 후 suggestQuery에 전달
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+#### src/searchBar/searchBar
+|함수|역할|
+|---|-------|
+|```openLink```|```Enter``` 키로 검색 시 외부 링크로 연결|
+|```clearQuery```|검색어 ```Enter```, ```Click``` 시 인풋값 초기화|
+<br/>
 
-### Analyzing the Bundle Size
+# Trouble Shooting
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### 1. data.json 불러오기 실패
+#### 문제
+- DB에서 데이터 받아오는 경우 mock 위해 fetch 사용했을 때 데이터 불러오기 실패
 
-### Making a Progressive Web App
+#### 해결
+- fetch에 url 들어가야 하므로 mock 할 때 public 폴더 기준으로 경로 지정해야 하는 것 학습
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+<br/>
 
-### Advanced Configuration
+### 2. 문자열 입력할 때마다 ```suggestQuery``` 발생
+#### 문제
+- 너무 잦은 query로 인한 API 및 resource 낭비
+- debounce 학습 후 lodash debounce 이용했으나 동작하지 않음
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+#### 해결
+- debounce 동작 원리 재학습 후 dependency 삭제하고 custom hook으로 만들어 적용
 
-### Deployment
+<br/>
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+### 3. 키보드 이벤트를 처리하는 handleKeyDown 테스트 코드
+#### 문제
+- jest, testing library 이용한 테스트 코드 구현이 어려움
 
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+#### 해결
+- 해당 로직을 searchPresenter로 옮겨 testable한 코드로 구현
