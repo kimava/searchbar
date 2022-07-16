@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SearchBar renders 1`] = `
+<div>
+  <div
+    class="sc-bczRLJ fhZrbi"
+  >
+    <div
+      class="sc-gsnTZi knBYqM"
+    >
+      <input
+        placeholder="검색어를 입력하세요"
+        value="마"
+      />
+      <button>
+        X
+      </button>
+    </div>
+    <ul
+      class="sc-dkzDqf jXHnvu"
+    >
+      <li
+        class="sc-hKMtZM hambiR"
+      >
+        <a
+          target="_blank"
+        >
+          마스크
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+`;
