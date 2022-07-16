@@ -1,27 +1,22 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import debounce from 'lodash.debounce';
+import React, { useState, useEffect } from 'react';
 import SearchBar from '../components/searchBar/searchBar';
+import useDebounce from '../hooks/useDebounce';
 
 function Search({ presenter }) {
   const [suggestion, setSuggestion] = useState([]);
   const [query, setQuery] = useState('');
 
-  function handleSearch(query) {
-    query ? setSuggestion(presenter.suggestQuery(query)) : setSuggestion([]);
-  }
+  const debounced = useDebounce(query, 200);
 
-  const debouncedHandleSearch = useMemo(
-    () => debounce(handleSearch, 300),
-    [handleSearch]
-  );
+  useEffect(() => {
+    debounced
+      ? setSuggestion(presenter.suggestQuery(debounced))
+      : setSuggestion([]);
+  }, [debounced]);
 
-  const handleChange = useCallback(
-    (value) => {
-      setQuery(value);
-      debouncedHandleSearch(value);
-    },
-    [debouncedHandleSearch]
-  );
+  const handleChange = (value) => {
+    setQuery(value);
+  };
 
   const handleKeyDown = (key, index, list, callback, onSelect) => {
     presenter.navigateSuggestion(key, index, list, callback, onSelect);
