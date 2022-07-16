@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-function SearchBar({ suggestion, query, setQuery, onChange, link }) {
+function SearchBar({ suggestion, query, setQuery, onChange, onKeyDown, link }) {
   const [listIndex, setListIndex] = useState(-1);
 
   function openLink(query) {
@@ -15,23 +15,24 @@ function SearchBar({ suggestion, query, setQuery, onChange, link }) {
 
   function handleKeyDown({ key, keyCode, isComposing }) {
     // return if no suggestion and prevent keydown occurs twice when pressed once
-    if (suggestion.length === 0 || isComposing || keyCode === 229) {
+    if (
+      query === '' ||
+      suggestion.length === 0 ||
+      isComposing ||
+      keyCode === 229
+    ) {
       return;
     }
 
-    const arrowDown = suggestion.length - 1 > listIndex;
-    const arrowUp = listIndex >= 0;
+    onKeyDown(key, listIndex, suggestion, setListIndex, handleSelect);
+  }
 
-    if (key === 'ArrowDown' && arrowDown) {
-      setListIndex((listIndex) => listIndex + 1);
-    } else if (key === 'ArrowUp' && arrowUp) {
-      setListIndex((listIndex) => listIndex - 1);
-    } else if (key === 'Enter' && listIndex >= 0) {
-      setQuery(suggestion[listIndex]);
-      openLink(suggestion[listIndex]);
-      setListIndex(-1);
-    } else if (key === 'Enter' && listIndex === -1 && query !== '') {
+  function handleSelect(index) {
+    if (index === -1) {
       openLink(query);
+    } else {
+      openLink(suggestion[index]);
+      setQuery(suggestion[index]);
     }
   }
 

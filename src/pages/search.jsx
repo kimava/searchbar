@@ -23,6 +23,10 @@ function Search({ presenter }) {
     [debouncedHandleSearch]
   );
 
+  const handleKeyDown = (key, index, list, callback, onSelect) => {
+    presenter.navigateSuggestion(key, index, list, callback, onSelect);
+  };
+
   function link(query) {
     return `https://www.google.com/search?q=${query}`;
   }
@@ -33,6 +37,7 @@ function Search({ presenter }) {
         suggestion={suggestion}
         query={query}
         setQuery={setQuery}
+        onKeyDown={handleKeyDown}
         onChange={handleChange}
         link={link}
       />
