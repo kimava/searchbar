@@ -33,4 +33,46 @@ describe('Search', () => {
       expect(items).toEqual(['Stub']);
     });
   });
+
+  describe('navigateSuggestion', () => {
+    let key;
+    let index;
+    let list;
+    let callback;
+    let onSelect;
+
+    beforeEach(() => {
+      index = -1;
+      list = ['마스크', '링겔대'];
+      callback = jest.fn();
+      onSelect = jest.fn();
+      search = new SearchPresenter(stubData, 3);
+    });
+
+    it('increases index when pressing arrow down key within suggestion list', () => {
+      search.navigateSuggestion('ArrowDown', index, list, callback, onSelect);
+      expect(callback).toHaveBeenCalledWith(0);
+    });
+
+    it('does not increase index if it is bigger than list length - 1', () => {
+      search.navigateSuggestion('ArrowDown', 3, list, callback, onSelect);
+      expect(callback).toHaveBeenCalledTimes(0);
+    });
+
+    it('decreases index when pressing arrow up key within suggestion list', () => {
+      search.navigateSuggestion('ArrowUp', 1, list, callback, onSelect);
+      expect(callback).toHaveBeenCalledWith(0);
+    });
+
+    it('does not decrease index if it is less than 0', () => {
+      search.navigateSuggestion('ArrowUp', -1, list, callback, onSelect);
+      expect(callback).toHaveBeenCalledTimes(0);
+    });
+
+    it('calls onSelect function and sets index default -1 when pressing enter key', () => {
+      search.navigateSuggestion('Enter', 1, list, callback, onSelect);
+      expect(onSelect).toHaveBeenCalledWith(1);
+      expect(callback).toBeCalledWith(-1);
+    });
+  });
 });

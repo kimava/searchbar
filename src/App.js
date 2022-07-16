@@ -9,7 +9,10 @@ function App({ client }) {
     client
       .fetchItems()
       .then((items) => setData(items))
-      .catch(console.log);
+      .catch((error) => {
+        console.log(error);
+        setData([]);
+      });
   }, [client]);
 
   const presenter = new SearchPresenter(data, 10);

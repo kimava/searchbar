@@ -4,35 +4,48 @@ import userEvent from '@testing-library/user-event';
 import SearchBar from '../searchBar';
 
 describe('SearchBar', () => {
-  const suggestion = ['마스크', '링겔대'];
+  let suggestion;
   let query;
   let setQuery;
   let onChange;
+  let onKeyDown;
   let link;
-  let SearchBarComponent;
+  let handleSelect;
 
   beforeEach(() => {
     setQuery = jest.fn();
     onChange = jest.fn();
+    onKeyDown = jest.fn();
     link = jest.fn();
-    SearchBarComponent = (
+    handleSelect = jest.fn();
+  });
+
+  it('renders', () => {
+    const component = render(
       <SearchBar
-        suggestion={suggestion}
-        query={query}
+        suggestion={['마스크']}
+        query={'마'}
         setQuery={setQuery}
         onChange={onChange}
+        onKeyDown={onKeyDown}
         link={link}
       />
     );
-  });
-
-  afterEach(() => {
-    query = '';
+    expect(component.container).toMatchSnapshot();
   });
 
   describe('Input', () => {
     beforeEach(() => {
-      render(SearchBarComponent);
+      render(
+        <SearchBar
+          suggestion={['마스크', '마스크2']}
+          query={query}
+          setQuery={setQuery}
+          onChange={onChange}
+          onKeyDown={onKeyDown}
+          link={link}
+        />
+      );
     });
 
     it('calls onChange when input value is changed', () => {
@@ -49,6 +62,28 @@ describe('SearchBar', () => {
       userEvent.click(button);
 
       expect(input).toHaveValue('');
+    });
+  });
+
+  describe('SuggestionBox', () => {
+    beforeEach(() => {
+      render(
+        <SearchBar
+          suggestion={['마스크']}
+          query={'마'}
+          setQuery={setQuery}
+          onChange={onChange}
+          onKeyDown={onKeyDown}
+          link={link}
+        />
+      );
+    });
+
+    it('changes query to suggested word when clicked', () => {
+      const suggested = screen.getByText('마스크');
+      userEvent.click(suggested);
+
+      expect(setQuery).toHaveBeenCalledWith('마스크');
     });
   });
 });

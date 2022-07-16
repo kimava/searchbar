@@ -31,8 +31,8 @@ function SearchBar({ suggestion, query, setQuery, onChange, onKeyDown, link }) {
     if (index === -1) {
       openLink(query);
     } else {
-      openLink(suggestion[index]);
       setQuery(suggestion[index]);
+      openLink(suggestion[index]);
     }
   }
 
@@ -51,7 +51,7 @@ function SearchBar({ suggestion, query, setQuery, onChange, onKeyDown, link }) {
       </StyledForm>
 
       {query && suggestion && (
-        <StyledUl>
+        <StyledSuggestionBox>
           {suggestion.map((item) => (
             <StyledLi
               key={item}
@@ -69,7 +69,7 @@ function SearchBar({ suggestion, query, setQuery, onChange, onKeyDown, link }) {
               </a>
             </StyledLi>
           ))}
-        </StyledUl>
+        </StyledSuggestionBox>
       )}
     </StyledDiv>
   );
@@ -107,7 +107,7 @@ const StyledForm = styled.div`
   }
 `;
 
-const StyledUl = styled.ul`
+const StyledSuggestionBox = styled.ul`
   margin: 0;
   padding: 0;
   width: 80%;
