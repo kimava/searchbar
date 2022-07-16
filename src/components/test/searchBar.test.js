@@ -7,20 +7,20 @@ describe('SearchBar', () => {
   const suggestion = ['마스크', '링겔대'];
   let query;
   let setQuery;
-  let onSearch;
+  let onChange;
   let link;
   let SearchBarComponent;
 
   beforeEach(() => {
     setQuery = jest.fn();
-    onSearch = jest.fn();
+    onChange = jest.fn();
     link = jest.fn();
     SearchBarComponent = (
       <SearchBar
         suggestion={suggestion}
         query={query}
         setQuery={setQuery}
-        onSearch={onSearch}
+        onChange={onChange}
         link={link}
       />
     );
@@ -35,12 +35,12 @@ describe('SearchBar', () => {
       render(SearchBarComponent);
     });
 
-    it('calls onSearch when input value is changed', () => {
+    it('calls onChange when input value is changed', () => {
       const input = screen.getByPlaceholderText('검색어를 입력하세요');
 
       userEvent.type(input, '마');
 
-      expect(onSearch).toHaveBeenCalledWith('마');
+      expect(onChange).toHaveBeenCalledWith('마');
     });
 
     it('clears query when clicking x button', () => {

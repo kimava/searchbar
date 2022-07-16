@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-function SearchBar({ suggestion, query, setQuery, onSearch, link }) {
+function SearchBar({ suggestion, query, setQuery, onChange, link }) {
   const [listIndex, setListIndex] = useState(-1);
 
   function openLink(query) {
@@ -42,8 +42,7 @@ function SearchBar({ suggestion, query, setQuery, onSearch, link }) {
           placeholder='검색어를 입력하세요'
           value={query || ''}
           onChange={({ target: { value } }) => {
-            setQuery(value);
-            onSearch(value);
+            onChange(value);
           }}
           onKeyDown={handleKeyDown}
         />

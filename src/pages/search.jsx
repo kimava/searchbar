@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import debounce from 'lodash.debounce';
 import SearchBar from '../components/searchBar';
 
@@ -10,7 +10,18 @@ function Search({ presenter }) {
     query ? setSuggestion(presenter.suggestQuery(query)) : setSuggestion([]);
   }
 
-  const debouncedhanldeSearch = debounce(handleSearch, 200);
+  const debouncedHandleSearch = useMemo(
+    () => debounce(handleSearch, 300),
+    [handleSearch]
+  );
+
+  const handleChange = useCallback(
+    (value) => {
+      setQuery(value);
+      debouncedHandleSearch(value);
+    },
+    [debouncedHandleSearch]
+  );
 
   function link(query) {
     return `https://www.google.com/search?q=${query}`;
@@ -22,7 +33,7 @@ function Search({ presenter }) {
         suggestion={suggestion}
         query={query}
         setQuery={setQuery}
-        onSearch={debouncedhanldeSearch}
+        onChange={handleChange}
         link={link}
       />
     </div>
